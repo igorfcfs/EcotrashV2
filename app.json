@@ -1,0 +1,41 @@
+{
+  "expo": {
+    "name": "Ecotrash V1",
+    "slug": "ecotrash_v1",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.igorfcfs.ecotrash_v1"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "owner": "igorfcfs",
+    "extra": {
+      "eas": {
+        "projectId": "49153ded-a8a9-4462-898f-a5dcde7c63c9"
+      }
+    },
+    "updates": {
+      "url": "https://u.expo.dev/49153ded-a8a9-4462-898f-a5dcde7c63c9"
+    }
+  }
+}
