@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Ecotrash V1",
-    "slug": "ecotrash_v1",
+    "name": "Ecotrash V2",
+    "slug": "ecotrash_v2",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -29,13 +29,13 @@
       "policy": "appVersion"
     },
     "owner": "igorfcfs",
+    "updates": {
+      "url": "https://u.expo.dev/aba767d0-22d1-4961-888c-efcc29f50328"
+    },
     "extra": {
       "eas": {
-        "projectId": "49153ded-a8a9-4462-898f-a5dcde7c63c9"
+        "projectId": "aba767d0-22d1-4961-888c-efcc29f50328"
       }
-    },
-    "updates": {
-      "url": "https://u.expo.dev/49153ded-a8a9-4462-898f-a5dcde7c63c9"
     }
   }
 }

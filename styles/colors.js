@@ -6,6 +6,7 @@ const cores = {
   terciario: '#1A1A1A', //preto
   
   background: '#F2F2F0', //cor de fundo
+  backgroundSecundario: '#E6E8D6', //cor de fundo secundário
 };
 
 export default cores;

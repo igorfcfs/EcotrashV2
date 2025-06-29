@@ -72,7 +72,7 @@ export default function EletronicoCard({ item, vazio, onDelete }) {
         <View style={styles.info}>
           <Text style={styles.tipo}>{item.categoria}</Text>
           <View style={styles.materiais}>
-            <Text style={styles.material}>Quantidade: {item.quantidade}</Text>
+            <Text style={styles.material}>Quantidade: {item.massa}g</Text>
             <Text style={styles.material}>🗓️ Reciclado em: {dataFormatada}</Text>
             <Text style={styles.material}>📍 Local: {nomeLocal}</Text>
             <Text style={styles.material}>Pontos: {item.pontos || 0}</Text>

@@ -33,7 +33,7 @@ const general = {
   },
   container3: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: colors.backgroundSecundario,
     padding: 20,
   },
   textInputs: {
