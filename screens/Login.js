@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Alert, Image } from 'react-native';
+import { View, Alert, Image, TouchableOpacity } from 'react-native';
 import { auth, db } from '../firebaseConfig'; // Importando Firebase Authentication
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
@@ -13,6 +13,7 @@ import { general } from '../styles/index';
 export default function Login({ navigation }) {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
+  const [mostrarSenha, setMostrarSenha] = useState(false);
 
   function signIn() {
     if (!email || !senha) {
@@ -75,7 +76,30 @@ export default function Login({ navigation }) {
       {/* Campos */}
       <View style={{width: '100%', marginBottom: 20}}>
         <Input placeholder="Insira seu email" keyboardType="email-address" secureTextEntry={false} value={email} onChangeText={setEmail} />
-        <Input placeholder="Insira sua senha" secureTextEntry={true} value={senha} onChangeText={setSenha} />
+        {/* Senha com botão olho */}
+        <View style={general.passwordContainer}>
+          <Input
+            placeholder="Insira sua senha"
+            secureTextEntry={!mostrarSenha}
+            value={senha}
+            onChangeText={setSenha}
+            style={general.passwordInput}
+          />
+          <TouchableOpacity
+            style={general.eyeButton}
+            onPress={() => setMostrarSenha(!mostrarSenha)}
+            activeOpacity={0.7}
+          >
+            <Image
+              source={
+                mostrarSenha
+                  ? require('../assets/icons/visible.png')
+                  : require('../assets/icons/non-visible.png')
+              }
+              style={general.eyeIcon}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/*Botões*/}

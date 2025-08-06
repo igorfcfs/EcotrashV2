@@ -132,6 +132,26 @@ const general = {
       borderWidth: 2,
       borderColor: colors.primario
     }
+  },
+  passwordContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    position: 'relative',
+  },
+  passwordInput: {
+    flex: 1,
+  },
+  eyeButton: {
+    position: 'absolute',
+    right: 10,
+    top: '50%',
+    transform: [{ translateY: -26 }], // metade da altura do ícone
+    padding: 8,
+  },
+  eyeIcon: {
+    width: 24,
+    height: 24,
+    tintColor: '#555',
   }
 };
 

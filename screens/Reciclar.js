@@ -16,11 +16,12 @@ import {
 import axios from 'axios';
 import * as Location from 'expo-location';
 import { API_URL } from '../api';
-import { auth } from '../firebaseConfig';
+import { auth, db } from '../firebaseConfig';
 import { categorias, pontosPorCategoriaPorGrama } from '../data/Categorias';
 import { colors, general } from '../styles';
 import BotaoPrimario from '../components/BotaoPrimario';
 import Titulo from '../components/Titulo';
+import { getDoc, doc } from 'firebase/firestore';
 
 export default function ReciclarScreen({ navigation }) {
   const [categoriaSelecionada, setCategoriaSelecionada] = useState(null);
@@ -63,12 +64,18 @@ export default function ReciclarScreen({ navigation }) {
       const pontos = pontosPorCategoriaPorGrama[categoriaSelecionada] * massa;
       setECoins(pontos);
 
+      const userDoc = await getDoc(doc(db, 'users', uid));
+      const cpf = userDoc.exists() ? userDoc.data().cpf : null;
+
+      console.log('UID do usuário:', uid);
+      console.log('CPF do usuário:', cpf);
+
       const payload = {
-        uid,
+        // uid: uid,
+        cpf: cpf,
+        massa: massa,
         categoria: categoriaSelecionada,
-        massa,
         localDescarte: localDescarteId,
-        pontos,
       };
 
       const response = await axios.post(`${API_URL}/eletronicos`, payload);
