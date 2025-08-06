@@ -44,15 +44,6 @@ const RelatorioScreen = ({ navigation }) => {
     }
   };
 
-  const handleDelete = async (id) => {
-    try {
-      await axios.delete(`${API_URL}/eletronicos/soft-delete/${id}`);
-      fetchEletronicos();
-    } catch (err) {
-      console.error('Erro ao deletar eletrônico:', err);
-    }
-  };
-
   const limparHistorico = async () => {
     Alert.alert(
       'Confirmar',
@@ -115,11 +106,10 @@ const RelatorioScreen = ({ navigation }) => {
             data={eletronicos}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
-              <EletronicoCard item={item} onDelete={handleDelete} />
+              <EletronicoCard item={item} />
             )}
             contentContainerStyle={{ paddingBottom: 20 }}
           />
-          <BotaoPrimario text="Limpar Histórico" onPress={limparHistorico} />
         </>
       )}
 

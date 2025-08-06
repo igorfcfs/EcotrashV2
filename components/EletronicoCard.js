@@ -5,7 +5,7 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; // Ícone do "X"
 import { colors } from '../styles/index'
 
-export default function EletronicoCard({ item, vazio, onDelete }) {
+export default function EletronicoCard({ item, vazio }) {
   const [nomeLocal, setNomeLocal] = useState('Buscando...');
 
   if (vazio) {
@@ -78,9 +78,6 @@ export default function EletronicoCard({ item, vazio, onDelete }) {
             <Text style={styles.material}>Pontos: {item.pontos || 0}</Text>
           </View>
         </View>
-        <TouchableOpacity onPress={() => onDelete?.(item.id)}>
-          <Ionicons name="close-circle" size={24} color="red" />
-        </TouchableOpacity>
       </View>
     );
   }
