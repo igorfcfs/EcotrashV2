@@ -1,5 +1,5 @@
 import React, { useState, useEffect, use } from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, ImageBackground, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import BotaoPrimario from '../components/BotaoPrimario';
 import Titulo from '../components/Titulo';
@@ -123,12 +123,7 @@ const HomeScreen = () => {
 
   return (
     <>
-      <LinearGradient
-        colors={[colors.primario, colors.secundario]}
-        start={{ x: 1, y: 0 }}
-        end={{ x: 0, y: 1 }}
-        style={styles.header}
-      >
+      <ImageBackground source={require('../assets/bannerHome.png')} style={styles.header}>
         <View style={{flexDirection: 'row', justifyContent: 'center'}}>
           <View style={{justifyContent: 'center', marginRight: 10, marginLeft: 10}}>
             <Text style={{fontSize: 30, color: 'white', fontWeight: 'bold', textAlign: 'center'}}>Bem vindo, {nome}</Text>
@@ -136,11 +131,11 @@ const HomeScreen = () => {
           </View>
           <Image
             source={require('../assets/flor.png')}
-            style={{ width: 100, height: 100, marginTop: 10 }}
+            style={{ width: 100, height: 110, marginTop: 10 }}
             resizeMode="cover"
           />
         </View>
-      </LinearGradient>
+      </ImageBackground>
       <View style={general.container2}>
 
         <Titulo text="Minha Jornada" />
@@ -173,7 +168,6 @@ const styles = StyleSheet.create({
   header: {
     padding: 50,
     borderRadius: 16,
-    marginBottom: 20,
     marginTop: 30,
     backgroundColor: colors.background
   },

@@ -20,10 +20,11 @@ export default function Rotas() {
         tabBarStyle: {
           height: 70,
           paddingBottom: 10,
-          paddingTop: 10
+          paddingTop: 10,
+          backgroundColor: "#4C4C4C"
         },
         tabBarActiveTintColor: colors.primario, // <- Aqui define a cor do texto ativo
-        tabBarInactiveTintColor: 'gray', // <- E aqui define a cor do texto inativo
+        tabBarInactiveTintColor: 'white', // <- E aqui define a cor do texto inativo
         tabBarHideOnKeyboard: true,
       }}
     >

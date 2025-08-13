@@ -70,7 +70,7 @@ const general = {
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
-    color: colors.primario,
+    color: colors.titulo,
   },
   subtitle: {
     fontSize: 20,
