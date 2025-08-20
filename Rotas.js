@@ -23,7 +23,7 @@ export default function Rotas() {
           paddingTop: 10,
           backgroundColor: "#4C4C4C"
         },
-        tabBarActiveTintColor: colors.primario, // <- Aqui define a cor do texto ativo
+        tabBarActiveTintColor: colors.secundario, // <- Aqui define a cor do texto ativo
         tabBarInactiveTintColor: 'white', // <- E aqui define a cor do texto inativo
         tabBarHideOnKeyboard: true,
       }}

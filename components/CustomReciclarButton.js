@@ -11,8 +11,8 @@ const CustomReciclarButton = () => {
     >
       <View style={styles.reciclarButton}>
         <Image
-          source={require('../assets/icone-lixeira-central.png')}
-          style={{ width: 80, height: 85, marginTop: 10 }}
+          source={require('../assets/ECoin.png')}
+          style={{ width: 90, height: 90, marginBottom: 5 }}
           resizeMode="cover"
         />
       </View>

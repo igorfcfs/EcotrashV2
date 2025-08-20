@@ -1,4 +1,3 @@
-import React from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import RelatorioGeralScreen from './screens/RelatorioGeral';
@@ -13,12 +12,16 @@ export default function RelatorioNavigation() {
       <Tab.Navigator
         screenOptions={{
           tabBarLabelStyle: { fontSize: 14, fontWeight: 'bold' },
-          tabBarActiveTintColor: colors.primario,
-          tabBarInactiveTintColor: 'gray',
-          tabBarIndicatorStyle: { backgroundColor: colors.primario, height: 3 },
+          tabBarActiveTintColor: colors.marrom, // laranja do print (Estatísticas ativo)
+          tabBarInactiveTintColor: '#FFFFFF', // branco para os inativos
+          tabBarIndicatorStyle: { backgroundColor: colors.marrom, height: 3 }, // roxo do sublinhado
           tabBarStyle: {
-            backgroundColor: '#fff',
-            elevation: 3,
+           backgroundColor: colors.backCard,
+            elevation: 0,
+            marginHorizontal: 16, // margem nas laterais
+            marginTop: 8,         // opcional, só pra dar respiro em cima
+            borderRadius: 50,     // arredondamento
+            overflow: 'hidden',   // garante que o conteúdo respeite o arredondamento
           },
         }}
       >
@@ -28,4 +31,3 @@ export default function RelatorioNavigation() {
     </SafeAreaView>
   );
 }
-

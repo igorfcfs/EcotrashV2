@@ -1,9 +1,11 @@
 import React, { useState, useEffect, use } from 'react';
-import { View, Text, Image, ImageBackground, StyleSheet } from 'react-native';
+import { ScrollView, View, Text, Image, ImageBackground, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import BotaoPrimario from '../components/BotaoPrimario';
 import Titulo from '../components/Titulo';
 import Card from '../components/CardEcoTrashs';
+import CardUserLixoReciclado from '../components/CardUserLixoReciclado';
+import CardECoins from '../components/CardECoins';
 import { colors, general } from '../styles/index';
 import { auth, db } from '../firebaseConfig';
 import { doc, updateDoc, onSnapshot } from 'firebase/firestore';
@@ -11,10 +13,10 @@ import axios from 'axios';
 import { API_URL } from '../api';
 import * as Location from 'expo-location';
 import { LinearGradient } from 'expo-linear-gradient';
+import formatarPeso from '../utils/formatarPeso';
 
 const HomeScreen = () => {
-  const navigation = useNavigation();
-  
+
   const [pontosAcumulados, setPontosAcumulados] = useState(0);
   const [massa, setMassa] = useState(0);
   const [userId, setUserId] = useState(null);
@@ -57,18 +59,18 @@ const HomeScreen = () => {
   // Busca local mais próximo do usuário
   const fetchLocalMaisProximo = async () => {
     try {
-        const { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') return;
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') return;
 
-        const location = await Location.getCurrentPositionAsync({});
-        const userCoords = {
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
-        };
+      const location = await Location.getCurrentPositionAsync({});
+      const userCoords = {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      };
 
-        const localInfo = await axios.get(`${API_URL}/locais/local_mais_proximo?lat=${userCoords.latitude}&lng=-${userCoords.longitude}`);
-        setLocalId(localInfo.data.id_local)
-        setNomeLocal(localInfo.data.nome_local);
+      const localInfo = await axios.get(`${API_URL}/locais/local_mais_proximo?lat=${userCoords.latitude}&lng=-${userCoords.longitude}`);
+      setLocalId(localInfo.data.id_local)
+      setNomeLocal(localInfo.data.nome_local);
     } catch (error) {
       console.error('Erro ao buscar local mais próximo:', error);
     }
@@ -122,49 +124,76 @@ const HomeScreen = () => {
   }, []);
 
   return (
-    <>
-      <ImageBackground source={require('../assets/bannerHome.png')} style={styles.header}>
-        <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-          <View style={{justifyContent: 'center', marginRight: 10, marginLeft: 10}}>
-            <Text style={{fontSize: 30, color: 'white', fontWeight: 'bold', textAlign: 'center'}}>Bem vindo, {nome}</Text>
+    <ScrollView>
+      <ImageBackground source={require('../assets/bannerHome.png')} style={styles.banner}>
+        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+          <View style={{ justifyContent: 'center', marginRight: 10, marginLeft: 10 }}>
+            <Text style={{ fontSize: 30, color: 'white', fontWeight: 'bold', textAlign: 'center' }}>Bem vindo, {nome}</Text>
             <Text style={styles.subtitle}>Vamos reciclar juntos.</Text>
           </View>
           <Image
             source={require('../assets/flor.png')}
-            style={{ width: 100, height: 110, marginTop: 10 }}
+            style={{ width: 100, height: 110 }}
             resizeMode="cover"
           />
         </View>
       </ImageBackground>
+
       <View style={general.container2}>
-
-        <Titulo text="Minha Jornada" />
-
-        <View style={general.cards.container}>
-          <Card descricao="Pontos Acumulados" quantidade={pontosAcumulados} />
-          <Card descricao="Matéria-Prima Reciclada" quantidade={`${massa} g`} />
-        </View>
+        <CardECoins descricao="Meus E-Coins" quantidade={pontosAcumulados} />
 
         {nomeLocal ?
-          <>
-            <Titulo text={`Você está próximo da ${nomeLocal}`} />
+          <View style={styles.container}>
+            <Titulo style={{ textAlign: 'flex-start' }}>
+              Você está próximo à <Text style={{ color: colors.negrito }}>{nomeLocal}</Text>
+            </Titulo>
 
-            <View style={general.cards.container}>
-              <Card descricao="Quantidade Total de Lixo Reciclado" quantidade={`${qtdLixo ?? 0} g`} />
-              <Card descricao="Quantidade que Você Reciclou" quantidade={`${qtdUserLixo ?? 0} g`} />
+            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 }}>
+              <Text style={styles.cardTitle}>Reciclados nesse local</Text>
+              <Text style={styles.cardValue}>{formatarPeso(qtdLixo)}</Text>
             </View>
-          </>
+
+            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 }}>
+              <Text style={styles.cardTitle}>Você reciclou nesse local</Text>
+              <Text style={styles.cardValue}>{formatarPeso(qtdUserLixo)}</Text>
+            </View>
+          </View>
           :
           <Titulo text={"Carregando dados..."} />
         }
+
+        <View>
+          <Titulo text="Seu Impacto" style={{ alignSelf: 'flex-start', color: colors.negrito }} />
+          <CardUserLixoReciclado massa={massa} />
+        </View>
       </View>
-    </>
+
+    </ScrollView>
   );
 };
 
 export default HomeScreen;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.backCard,
+    borderRadius: 16,
+    padding: 20,
+    marginVertical: 50,
+  },
+  qtdReciclado: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
+  },
+  banner: {
+    width: '100%',
+    height: 300,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   header: {
     padding: 50,
     borderRadius: 16,
@@ -180,5 +209,15 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#F0F0F0',
     marginTop: 10,
+  },
+  cardTitle: {
+    fontSize: 16,
+    color: colors.branco,
+    fontWeight: 'bold',
+  },
+  cardValue: {
+    fontSize: 16,
+    color: colors.negrito,
+    fontWeight: 'bold',
   },
 });

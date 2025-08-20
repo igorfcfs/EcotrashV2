@@ -15,6 +15,7 @@ const general = {
   tabBar: {
     flex: 1,
     paddingTop: 30,
+    backgroundColor: colors.background,
   },
   container: {
     flex: 1,
@@ -33,7 +34,7 @@ const general = {
   },
   container3: {
     flex: 1,
-    backgroundColor: colors.backgroundSecundario,
+    backgroundColor: colors.background,
     padding: 20,
   },
   textInputs: {
