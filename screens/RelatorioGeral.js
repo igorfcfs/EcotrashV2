@@ -20,15 +20,15 @@ const RelatorioScreen = () => {
       if (!user) return;
 
       const USER_URL = API_URL + '/relatorio' + '/' + user.uid;
-      console.log(USER_URL);
+      // console.log(USER_URL);
       const response = await axios.get(USER_URL);
       const analytics = response.data;
 
       setMassa(analytics.massa);
       setPontos(analytics.pontos);
       setDadosCategoria(analytics.por_categoria);
-      console.log('Analytics completo:', analytics);
-      console.log('Dados por categoria:', analytics.por_categoria);
+      // console.log('Analytics completo:', analytics);
+      // console.log('Dados por categoria:', analytics.por_categoria);
     } catch (err){
       console.error('Erro ao buscar eletrônicos:', err);
       setError(err.message || 'Erro ao carregar dados');
@@ -77,10 +77,10 @@ const RelatorioScreen = () => {
 
   const relatorio = relatorioCompleto.filter(item => item.quantidade > 0);
   
-  console.log('Relatório filtrado:', relatorio);
-  console.log('Dados categoria raw:', dadosCategoria);
-  console.log('Quantidade objeto:', quantidade);
-  console.log('Porcentagem objeto:', porcentagem);
+  // console.log('Relatório filtrado:', relatorio);
+  // console.log('Dados categoria raw:', dadosCategoria);
+  // console.log('Quantidade objeto:', quantidade);
+  // console.log('Porcentagem objeto:', porcentagem);
 
   const screenWidth = Dimensions.get('window').width;
 
@@ -95,7 +95,7 @@ const RelatorioScreen = () => {
       legendFontSize: 13,
     }));
 
-  console.log('Dados do gráfico de pizza (após filtro):', pieChartData);
+  // console.log('Dados do gráfico de pizza (após filtro):', pieChartData);
 
   // Dados para o gráfico de linhas (quantidade em gramas) - usando dados válidos apenas
   const lineChartData = relatorio.length > 0 ? {
@@ -104,7 +104,7 @@ const RelatorioScreen = () => {
       {
         data: relatorio.map(item => {
           const quantidade = Number(item.quantidade) || 0;
-          console.log(`${item.categoria}: quantidade=${item.quantidade}, convertida=${quantidade}`);
+          // console.log(`${item.categoria}: quantidade=${item.quantidade}, convertida=${quantidade}`);
           return quantidade;
         }),
         color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
@@ -135,12 +135,7 @@ const RelatorioScreen = () => {
 
   return (
     <ScrollView style={general.container3}>
-      <Text style={general.title}>Conheça suas estatísticas!</Text>
-
-      <View style={general.cards.container}>
-        <Card descricao="Pontos Acumulados" quantidade={pontos} />
-        <Card descricao="Matéria-Prima Reciclada" quantidade={`${massa} g`} />
-      </View>
+      <Titulo text="Conheça suas estatísticas!" />
       
       {relatorio.length > 0 ? (
         <>

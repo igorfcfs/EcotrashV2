@@ -1,6 +1,10 @@
-import { Text, StyleSheet } from 'react-native';
-import { colors, general } from '../styles/index'
+import { Text } from 'react-native';
+import { general } from '../styles';
 
-export default function Title({ text }) {
-    return <Text style={general.title}>{text}</Text>
+export default function Titulo({ text, children, style }) {
+  return (
+    <Text style={[general.title, style]}>
+      {text ?? children}
+    </Text>
+  );
 }

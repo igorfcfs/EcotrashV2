@@ -44,31 +44,6 @@ const RelatorioScreen = ({ navigation }) => {
     }
   };
 
-  const limparHistorico = async () => {
-    Alert.alert(
-      'Confirmar',
-      'Tem certeza que deseja limpar todo o histórico?',
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        {
-          text: 'Sim',
-          onPress: async () => {
-            try {
-              const user = auth.currentUser;
-              if (user) {
-                await axios.delete(`${API_URL}/eletronicos/soft-delete/limpar/${user.uid}`);
-                fetchEletronicos();
-              }
-            } catch (err) {
-              console.error('Erro ao limpar histórico:', err);
-            }
-          },
-        },
-      ],
-      { cancelable: true }
-    );
-  };
-
   useEffect(() => {
     const interval = setInterval(fetchEletronicos, 5000);
     fetchEletronicos();
@@ -112,8 +87,6 @@ const RelatorioScreen = ({ navigation }) => {
           />
         </>
       )}
-
-      <BotaoPrimario text="+" onPress={() => navigation.navigate('Reciclar')} />
     </View>
   );
 };
