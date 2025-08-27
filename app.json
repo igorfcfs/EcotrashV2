@@ -20,7 +20,12 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.igorfcfs.ecotrash_v1"
+      "package": "com.igorfcfs.ecotrash_v2",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyCBakrF6a0PwuRoKd_oP5rGzKbyeDuBiOY"
+        }
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
