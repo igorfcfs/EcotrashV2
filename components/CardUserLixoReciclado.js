@@ -3,7 +3,7 @@ import { colors, metrics } from '../styles';
 import { AntDesign } from '@expo/vector-icons'; // ícone de seta
 
 export default function CardUserLixoReciclado({ massa }) {
-    const valorFormatado = massa < 1000 ? massa : (massa / 1000).toFixed(0);
+    const valorFormatado = massa < 1000 ? massa : (massa / 1000).toFixed(2);
     const unidade = massa < 1000 ? 'g' : 'kg';
 
     return (
@@ -24,7 +24,7 @@ export default function CardUserLixoReciclado({ massa }) {
 const styles = StyleSheet.create({
     card: {
         backgroundColor: colors.backCardLixoReciclado,
-        width: '60%',
+        width: '80%',
         height: 100,
         padding: 15,
         borderRadius: 30,

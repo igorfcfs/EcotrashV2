@@ -43,29 +43,20 @@ const RelatorioScreen = () => {
   }, []);
 
   const quantidade = dadosCategoria ? {
-    pilhas: dadosCategoria["Pilhas"]?.massa || 0,
-    baterias: dadosCategoria["Baterias"]?.massa || 0,
-    celulares: dadosCategoria["Celulares"]?.massa || 0,
-    computadores: dadosCategoria["Computadores"]?.massa || 0,
-    outros: dadosCategoria["Outros"]?.massa || 0
+    pilhas: dadosCategoria["Pilha"]?.massa || 0,
+    baterias: dadosCategoria["Bateria"]?.massa || 0,
+    celulares: dadosCategoria["Celular"]?.massa || 0,
+    computadores: dadosCategoria["Computador"]?.massa || 0,
+    outros: dadosCategoria["Outro"]?.massa || 0
   } : {};
 
   const porcentagem = dadosCategoria ? {
-    pilhas: parseFloat((dadosCategoria["Pilhas"]?.porcentagem || "0").toString().replace('%', '')) || 0,
-    baterias: parseFloat((dadosCategoria["Baterias"]?.porcentagem || "0").toString().replace('%', '')) || 0,
-    celulares: parseFloat((dadosCategoria["Celulares"]?.porcentagem || "0").toString().replace('%', '')) || 0,
-    computadores: parseFloat((dadosCategoria["Computadores"]?.porcentagem || "0").toString().replace('%', '')) || 0,
-    outros: parseFloat((dadosCategoria["Outros"]?.porcentagem || "0").toString().replace('%', '')) || 0
+    pilhas: dadosCategoria["Pilha"]?.porcentagem || 0,
+    baterias: dadosCategoria["Bateria"]?.porcentagem || 0,
+    celulares: dadosCategoria["Celular"]?.porcentagem || 0,
+    computadores: dadosCategoria["Computador"]?.porcentagem || 0,
+    outros: dadosCategoria["Outro"]?.porcentagem || 0
   } : {};
-
-
-  const pontosPorCategoria = {
-    Pilhas: 5,
-    Baterias: 10,
-    Celulares: 100,
-    Computadores: 150,
-    Outros: 20,
-  };
   
   const relatorioCompleto = [
     { categoria: 'Pilhas', quantidade: quantidade.pilhas, porcentagem: porcentagem.pilhas },
@@ -164,7 +155,7 @@ const RelatorioScreen = () => {
                 {pieChartData.map((item, index) => (
                   <View key={index} style={[styles.chip, { backgroundColor: item.color }]}>
                     <Text style={styles.chipText}>
-                      {item.name.toUpperCase()} {item.population.toFixed(1)}%
+                      {item.name.toUpperCase()} {item.population}%
                     </Text>
                   </View>
                 ))}
