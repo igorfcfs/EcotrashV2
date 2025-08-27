@@ -216,6 +216,7 @@ export default function Cadastro({ navigation }) {
           keyboardType="email-address"
           value={email}
           onChangeText={setEmail}
+          autoCapitalize="none"
         />
 
         {/* Senha com botão olho */}
@@ -226,6 +227,7 @@ export default function Cadastro({ navigation }) {
             value={senha}
             onChangeText={setSenha}
             style={general.passwordInput}
+            autoCapitalize="none"
           />
           <TouchableOpacity
             style={general.eyeButton}

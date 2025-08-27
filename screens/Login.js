@@ -75,7 +75,7 @@ export default function Login({ navigation }) {
 
       {/* Campos */}
       <View style={{width: '100%', marginBottom: 20}}>
-        <Input placeholder="Insira seu email" keyboardType="email-address" secureTextEntry={false} value={email} onChangeText={setEmail} />
+        <Input placeholder="Insira seu email" keyboardType="email-address" secureTextEntry={false} value={email} onChangeText={setEmail} autoCapitalize="none" />
         {/* Senha com botão olho */}
         <View style={general.passwordContainer}>
           <Input
@@ -84,6 +84,7 @@ export default function Login({ navigation }) {
             value={senha}
             onChangeText={setSenha}
             style={general.passwordInput}
+            autoCapitalize="none"
           />
           <TouchableOpacity
             style={general.eyeButton}

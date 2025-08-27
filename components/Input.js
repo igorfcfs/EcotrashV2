@@ -8,7 +8,8 @@ export default function Input({
     value, 
     onChangeText, 
     style,
-    editable
+    editable,
+    autoCapitalize
 }) {
     return (
         <TextInput
@@ -20,6 +21,7 @@ export default function Input({
             value={value}
             onChangeText={onChangeText}
             editable={editable}
+            autoCapitalize={autoCapitalize}
         />
     );
 }
