@@ -5,6 +5,10 @@ import { NavigationContainer } from '@react-navigation/native'; //CONTÊINER PAR
 import { createStackNavigator } from '@react-navigation/stack'
 import Login from './screens/Login';
 import Cadastro from './screens/Cadastro';
+import RelatorioNavigation from "./RelatorioNavigation";
+import Mapa from "./screens/Mapa";
+import Perfil from './screens/Perfil';
+import EditarPerfil from './screens/EditarPerfil';
 import Rotas from './Rotas';
 import { onAuthStateChanged } from 'firebase/auth';
 import ReciclarScreen from "./screens/Reciclar";
@@ -56,6 +60,18 @@ const App = () => {
                 fontWeight: 'bold',
               },
               title: 'Formulário', // <- título da tela no header
+            }} />
+            <Stack.Screen name='EditarPerfil' component={EditarPerfil} options={{
+              headerShown: true,
+              headerStyle: {
+                backgroundColor: colors.secundario, // <- cor de fundo do header
+                alignSelf: 'center'
+              },
+              headerTintColor: '#fff', // <- cor do texto e ícones do header
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
+              title: 'Editar Perfil', // <- título da tela no header
             }} />
           </Stack.Navigator>
         ) : (

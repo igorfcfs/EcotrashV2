@@ -1,9 +1,11 @@
 import { Text, StyleSheet, Image, Pressable } from 'react-native';
 import { colors, metrics } from '../styles';
+import { useNavigation } from '@react-navigation/native';
 
-export default function CardECoins({ descricao, quantidade, navigation }) {
+export default function CardECoins({ descricao, quantidade }) {
+  const navigation = useNavigation();
   return (
-    <Pressable style={styles.card} onPress={() => console.log('Card Pressed')}>
+    <Pressable style={styles.card} onPress={() => navigation.navigate('Perfil')}>
       <Text style={styles.cardTitle}>{descricao}</Text>
       <Image source={require('../assets/ECoin.png')} style={styles.coinImage} />
       <Text style={styles.cardValue}>{quantidade}</Text>

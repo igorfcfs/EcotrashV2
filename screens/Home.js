@@ -1,5 +1,5 @@
 import React, { useState, useEffect, use } from 'react';
-import { ScrollView, View, Text, Image, ImageBackground, StyleSheet } from 'react-native';
+import { ScrollView, View, Text, Image, ImageBackground, StyleSheet, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import BotaoPrimario from '../components/BotaoPrimario';
 import Titulo from '../components/Titulo';
@@ -159,11 +159,25 @@ const HomeScreen = () => {
             </View>
           </View>
           :
-          <Titulo text={"Carregando dados..."} />
+          <View style={styles.container}>
+            <Titulo style={{ textAlign: 'flex-start' }}>
+              Você está próximo à <ActivityIndicator style={{ color: colors.negrito }} />
+            </Titulo>
+
+            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 }}>
+              <Text style={styles.cardTitle}>Reciclados nesse local</Text>
+              <ActivityIndicator style={styles.cardValue} />
+            </View>
+
+            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 }}>
+              <Text style={styles.cardTitle}>Você reciclou nesse local</Text>
+              <ActivityIndicator style={styles.cardValue} />
+            </View>
+          </View>
         }
 
         <View>
-          <Titulo text="Seu Impacto" style={{ alignSelf: 'flex-start', color: colors.negrito }} />
+          <Titulo text="Seu Impacto" style={{ alignSelf: 'flex-start', color: colors.negrito, marginRight: 100 }} />
           <CardUserLixoReciclado massa={massa} />
         </View>
       </View>

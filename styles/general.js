@@ -40,7 +40,7 @@ const general = {
   textInputs: {
     input: {
         width: '100%',
-        backgroundColor: '#FFFFFF',
+        backgroundColor: colors.backCard,
         borderWidth: 1,
         borderColor: colors.primario, // Verde moderno
         color: colors.primario, // Verde escuro

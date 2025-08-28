@@ -25,12 +25,8 @@ import axios from 'axios';
 
 export default function Perfil({ navigation }) {
   const [imageUri, setImageUri] = useState(null);
-  const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
-  const [email, setEmail] = useState('');
   const [nome, setNome] = useState('Usuário');
-  const [endereco, setEndereco] = useState('');
   const [massa, setMassa] = useState(0);
-  const [userId, setUserId] = useState(null);
 
   // Busca dados do usuário logado
   useEffect(() => {
@@ -77,41 +73,6 @@ export default function Perfil({ navigation }) {
     }
   };
 
-  const uploadImageAndSaveUrl = async (uri) => {
-    try {
-      const user = auth.currentUser;
-      if (!user) return;
-
-      const response_img = await fetch(uri); // baixa a imagem
-      const blob = await response_img.blob(); // converte para blob
-
-      const storage = getStorage();
-      const filename = `gs://ecotrash-v2.firebasestorage.app/profile/${user.uid}/photo.jpg`;
-      const imageRef = ref(storage, filename);
-
-      await uploadBytes(imageRef, blob); // faz upload do blob pro Firebase
-      const downloadURL = await getDownloadURL(imageRef); // pega a URL pública
-
-      const userRef = doc(db, 'users', user.uid);
-      await updateDoc(userRef, { fotoPerfil: downloadURL });
-
-      Alert.alert('Sucesso', 'Foto de perfil atualizada com sucesso!');
-    } catch (error) {
-      console.error('🔥 Erro ao fazer upload da imagem:', error);
-      Alert.alert('Erro', 'Não foi possível atualizar a foto de perfil.');
-    }
-  };
-
-  useEffect(() => {
-    (async () => {
-      const galleryStatus = await ImagePicker.requestMediaLibraryPermissionsAsync();
-      const cameraStatus = await ImagePicker.requestCameraPermissionsAsync();
-      setHasGalleryPermission(
-        galleryStatus.status === 'granted' && cameraStatus.status === 'granted'
-      );
-    })();
-  }, []);
-
   useEffect(() => {
     const user = auth.currentUser;
     if (!user) return;
@@ -122,70 +83,12 @@ export default function Perfil({ navigation }) {
       if (docSnapshot.exists()) {
         const data = docSnapshot.data();
         setNome(data.nome || 'Usuário');
-        setEmail(data.email || '');
-        setEndereco(data.telefone || '');
         setImageUri(data.fotoPerfil || null);
       }
     });
 
     return () => unsubscribe();
   }, []);
-
-  const pickImageFromGallery = async () => {
-    if (!hasGalleryPermission) {
-      Alert.alert('Permissão necessária', 'Você precisa conceder permissão para acessar a galeria.');
-      return;
-    }
-
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.canceled && result.assets?.length > 0) {
-      const asset = result.assets[0];
-      if (asset.uri) {
-        console.log(asset.uri);
-        setImageUri(asset.uri);
-        await uploadImageAndSaveUrl(asset.uri);
-      } else {
-        console.warn('Imagem não possui URI válida:', asset);
-      }
-    }
-  };
-
-  const takePhoto = async () => {
-    if (!hasGalleryPermission) {
-      Alert.alert('Permissão necessária', 'Você precisa conceder permissão para usar a câmera.');
-      return;
-    }
-
-    const result = await ImagePicker.launchCameraAsync({
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.canceled && result.assets?.length > 0) {
-      const asset = result.assets[0];
-      if (asset.uri) {
-        setImageUri(asset.uri);
-        await uploadImageAndSaveUrl(asset.uri);
-      } else {
-        console.warn('Imagem não possui URI válida:', asset);
-      }
-    }
-  };
-
-  const changePhoto = () => {
-    Alert.alert('Trocar foto', 'Escolha uma opção', [
-      { text: 'Selecionar da galeria', onPress: pickImageFromGallery },
-      { text: 'Tirar uma foto', onPress: takePhoto },
-      { text: 'Cancelar', style: 'cancel' },
-    ]);
-  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -199,7 +102,7 @@ export default function Perfil({ navigation }) {
             <Image source={require('../assets/default-avatar.png')} style={styles.avatar} />
           )}
           <Text style={styles.nome}>{nome}</Text>
-          <TouchableOpacity style={styles.editButton} onPress={changePhoto}>
+          <TouchableOpacity style={styles.editButton} onPress={() => navigation.navigate('EditarPerfil')}>
             <Text style={styles.editText}>EDITAR PERFIL</Text>
           </TouchableOpacity>
         </ImageBackground>
@@ -234,6 +137,8 @@ export default function Perfil({ navigation }) {
             <Text style={styles.listItemText}>Ajuda</Text>
           </TouchableOpacity>
         </View>
+
+        <BotaoPrimario text="Log out" onPress={handleLogout} />
 
       </ScrollView>
     </SafeAreaView>

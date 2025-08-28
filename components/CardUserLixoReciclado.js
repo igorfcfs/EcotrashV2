@@ -1,13 +1,15 @@
 import { Text, StyleSheet, View, Pressable } from 'react-native';
 import { colors, metrics } from '../styles';
 import { AntDesign } from '@expo/vector-icons'; // ícone de seta
+import { useNavigation } from '@react-navigation/native';
 
 export default function CardUserLixoReciclado({ massa }) {
     const valorFormatado = massa < 1000 ? massa : (massa / 1000).toFixed(2);
     const unidade = massa < 1000 ? 'g' : 'kg';
+    const navigation = useNavigation();
 
     return (
-        <Pressable style={styles.card} onPress={() => console.log('Card Pressed')}>
+        <Pressable style={styles.card} onPress={() => navigation.navigate('Relatório')}>
             <Text style={styles.cardMass}>
                 {valorFormatado}
                 <Text style={styles.cardUnit}>{unidade}</Text>
