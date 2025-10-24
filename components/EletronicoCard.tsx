@@ -87,7 +87,7 @@ export default function EletronicoCard({ item, vazio }: EletronicoCardProps) {
 
   return (
     <View style={[styles.card, { backgroundColor: colors.backCard }]}>
-      {item.foto && <Image source={{ uri: item.foto }} style={styles.image} />}
+      {item.foto && <Image source={{ uri: `data:image/jpeg;base64,${item.foto}` }} style={styles.image} />}
       <View style={styles.info}>
         <Text style={[styles.tipo, { color: colors.secundario }]}>{item.categoria}</Text>
         <View style={styles.materiais}>
