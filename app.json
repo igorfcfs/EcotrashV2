@@ -1,41 +1,59 @@
 {
   "expo": {
-    "name": "Ecotrash V2",
+    "name": "EcoTech",
     "slug": "ecotrash_v2",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "icon": "./assets/logo.png",
+    "scheme": "ecotech",
+    "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "splash": {
-      "image": "./assets/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.igorfcfs.ecotrash_v1"
+      "edgeToEdgeEnabled": true,
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyCBakrF6a0PwuRoKd_oP5rGzKbyeDuBiOY"
+        }
+      },
+      "package": "com.igorfcfs.ecotrash_v2"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
     },
-    "runtimeVersion": {
-      "policy": "appVersion"
-    },
-    "owner": "igorfcfs",
-    "updates": {
-      "url": "https://u.expo.dev/aba767d0-22d1-4961-888c-efcc29f50328"
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
     },
     "extra": {
       "eas": {
         "projectId": "aba767d0-22d1-4961-888c-efcc29f50328"
       }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/aba767d0-22d1-4961-888c-efcc29f50328"
     }
   }
 }
