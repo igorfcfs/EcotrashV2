@@ -13,16 +13,16 @@ import { auth, db } from '../../firebaseConfig';
 import formatarPeso from '../../utils/formatarPeso';
 
 const HomeScreen = () => {
-  
-  const [pontosAcumulados, setPontosAcumulados] = useState(0);
-  const [massa, setMassa] = useState(0);
+  const [pontosAcumulados, setPontosAcumulados] = useState<number | null>(null);
+  const [massa, setMassa] = useState<number | null>(null);
   const [userId, setUserId] = useState('');
   const [localId, setLocalId] = useState(null);
   const [qtdLixo, setQtdLixo] = useState(null);
   const [qtdUserLixo, setQtdUserLixo] = useState(null);
   const [nomeLocal, setNomeLocal] = useState(null);
-  const [nome, setNome] = useState('Usuário');
-  
+  const [nome, setNome] = useState('');
+  const [loadingNome, setLoadingNome] = useState(true);
+
   const { colors } = useTheme();
   const general = getGeneralStyles(colors);
 
@@ -46,17 +46,6 @@ const HomeScreen = () => {
       justifyContent: 'center',
       alignItems: 'center',
     },
-    header: {
-      padding: 50,
-      borderRadius: 16,
-      marginTop: 30,
-      backgroundColor: colors.background
-    },
-    welcomeText: {
-      fontSize: 22,
-      color: '#fff',
-      fontWeight: '600',
-    },
     subtitle: {
       fontSize: 18,
       color: '#F0F0F0',
@@ -74,37 +63,37 @@ const HomeScreen = () => {
     },
   });
 
-  // Busca dados do usuário logado
+  // 🔹 Busca dados do usuário logado
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
         setUserId(user.uid);
-        fetchLocalMaisProximo(); // Busca o local mais próximo
+        fetchLocalMaisProximo();
       } else {
         console.warn("Usuário não está logado");
       }
     });
-
     return () => unsubscribe();
   }, []);
 
+  // 🔹 Ouve dados do usuário (nome)
   useEffect(() => {
     const user = auth.currentUser;
     if (!user) return;
 
     const userRef = doc(db, 'users', user.uid);
-
     const unsubscribe = onSnapshot(userRef, (docSnapshot) => {
       if (docSnapshot.exists()) {
         const data = docSnapshot.data();
         setNome(data.nome || 'Usuário');
       }
+      setLoadingNome(false);
     });
 
     return () => unsubscribe();
   }, []);
 
-  // Busca local mais próximo do usuário
+  // 🔹 Busca local mais próximo
   const fetchLocalMaisProximo = async () => {
     try {
       const { status } = await Location.requestForegroundPermissionsAsync();
@@ -116,17 +105,17 @@ const HomeScreen = () => {
         longitude: location.coords.longitude,
       };
 
-      const localInfo = await axios.get(`${API_URL}/locais/local_mais_proximo?lat=${userCoords.latitude}&lng=${userCoords.longitude}`);
+      const localInfo = await axios.get(
+        `${API_URL}/locais/local_mais_proximo?lat=${userCoords.latitude}&lng=${userCoords.longitude}`
+      );
       setLocalId(localInfo.data.id_local);
       setNomeLocal(localInfo.data.nome_local);
-
-      console.log(userCoords.latitude, userCoords.longitude)
     } catch (error) {
       console.error('Erro ao buscar local mais próximo:', error);
     }
   };
 
-  // Busca relatório do local e do usuário
+  // 🔹 Busca relatório do local e do usuário
   useEffect(() => {
     if (!localId || !userId) return;
 
@@ -142,14 +131,12 @@ const HomeScreen = () => {
       }
     };
 
-    fetchDados(); // primeira chamada
-    const interval = setInterval(fetchDados, 10000); // a cada 10 segundos
-
-    return () => clearInterval(interval); // limpa o intervalo ao desmontar
+    fetchDados();
+    const interval = setInterval(fetchDados, 10000);
+    return () => clearInterval(interval);
   }, [localId, userId]);
 
-
-  // Atualiza pontos e eletrônicos a cada 60s
+  // 🔹 Atualiza pontos e massa
   useEffect(() => {
     const fetchAnalytics = async () => {
       const user = auth.currentUser;
@@ -168,17 +155,28 @@ const HomeScreen = () => {
     };
 
     fetchAnalytics();
-    const interval = setInterval(fetchAnalytics, 10000); // Atualiza a cada 10s
-
+    const interval = setInterval(fetchAnalytics, 10000);
     return () => clearInterval(interval);
   }, []);
 
   return (
     <ScrollView>
+      {/* 🔸 Banner de boas-vindas */}
       <ImageBackground source={require('../../assets/bannerHome.png')} style={styles.banner}>
         <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-          <View style={{ justifyContent: 'center', marginRight: 10, marginLeft: 10 }}>
-            <Text style={{ fontSize: 30, color: 'white', fontWeight: 'bold', textAlign: 'center' }}>Bem vindo, {nome.split(' ')[0]}</Text>
+          <View style={{ justifyContent: 'center', marginHorizontal: 10 }}>
+            <Text style={{ fontSize: 30, color: 'white', fontWeight: 'bold', textAlign: 'center' }}>
+              Bem-vindo,{' '}
+              {loadingNome ? (
+                <ActivityIndicator
+                  size="small"
+                  color={colors.secundario}
+                  style={{ transform: [{ scale: 0.9 }], marginBottom: -3 }}
+                />
+              ) : (
+                nome.split(' ')[0]
+              )}
+            </Text>
             <Text style={styles.subtitle}>Vamos reciclar juntos.</Text>
           </View>
           <Image
@@ -190,48 +188,59 @@ const HomeScreen = () => {
       </ImageBackground>
 
       <View style={general.container2}>
-        <CardECoins descricao="Meus E-Coins" quantidade={pontosAcumulados} />
+        {/* 🔸 Meus E-Coins */}
+        <CardECoins
+          descricao="Meus E-Coins"
+          quantidade={
+            pontosAcumulados === null ? (
+              <ActivityIndicator size="small" color={colors.secundario} />
+            ) : (
+              pontosAcumulados
+            )
+          }
+        />
 
-        {nomeLocal ?
+        {/* 🔸 Local mais próximo */}
+        {nomeLocal ? (
           <View style={styles.container}>
             <Titulo style={{ textAlign: 'left' }}>
               Você está próximo à <Text style={{ color: colors.negrito }}>{nomeLocal}</Text>
             </Titulo>
 
-            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 }}>
+            <View style={styles.qtdReciclado}>
               <Text style={styles.cardTitle}>Reciclados nesse local</Text>
               <Text style={styles.cardValue}>{formatarPeso(qtdLixo)}</Text>
             </View>
 
-            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 }}>
+            <View style={styles.qtdReciclado}>
               <Text style={styles.cardTitle}>Você reciclou nesse local</Text>
               <Text style={styles.cardValue}>{formatarPeso(qtdUserLixo)}</Text>
             </View>
           </View>
-          :
+        ) : (
           <View style={styles.container}>
             <Titulo style={{ textAlign: 'left' }}>
-              Você está próximo à <ActivityIndicator />
+              Você está próximo à <ActivityIndicator color={colors.secundario} />
             </Titulo>
 
-            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 }}>
+            <View style={styles.qtdReciclado}>
               <Text style={styles.cardTitle}>Reciclados nesse local</Text>
-              <ActivityIndicator />
+              <ActivityIndicator color={colors.secundario} />
             </View>
 
-            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 }}>
+            <View style={styles.qtdReciclado}>
               <Text style={styles.cardTitle}>Você reciclou nesse local</Text>
-              <ActivityIndicator />
+              <ActivityIndicator color={colors.secundario} />
             </View>
           </View>
-        }
+        )}
 
-        <View>
-          <Titulo text="Seu Impacto" style={{ alignSelf: 'flex-start', color: colors.negrito, marginRight: 100 }} />
+        {/* 🔸 Seu Impacto */}
+        <View style={{ marginBottom: 30 }}>
+          <Titulo text="Seu Impacto" style={{ alignSelf: 'flex-start', color: colors.negrito }} />
           <CardUserLixoReciclado massa={massa} />
         </View>
       </View>
-
     </ScrollView>
   );
 };
