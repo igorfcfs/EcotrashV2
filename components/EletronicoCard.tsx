@@ -12,6 +12,8 @@ interface EletronicoItem {
   localDescarte?: string;
   foto?: string;
   pontos?: number;
+  analise_ia?: string;
+  anomalia_detectada?: boolean;
 }
 
 interface EletronicoCardProps {
@@ -85,8 +87,25 @@ export default function EletronicoCard({ item, vazio }: EletronicoCardProps) {
     );
   }
 
+  const formatarMassa = (massaEmGramas: number) => {
+    if (massaEmGramas == null || isNaN(massaEmGramas)) return '0g';
+    if (massaEmGramas < 1000) {
+      return `${massaEmGramas}g`;
+    } else if (massaEmGramas < 1_000_000) {
+      return `${(massaEmGramas / 1000).toFixed(2)}kg`;
+    } else {
+      return `${(massaEmGramas / 1_000_000).toFixed(2)}t`;
+    }
+  };
+
   return (
-    <View style={[styles.card, { backgroundColor: colors.backCard }]}>
+    <View
+      style={[
+        styles.card,
+        { backgroundColor: item.anomalia_detectada ? '#d4d4d4ff' : colors.backCard } // 🔴 fundo vermelho se anômalo
+      ]}
+    >
+
       {item.foto && <Image source={{ uri: `data:image/jpeg;base64,${item.foto}` }} style={styles.image} />}
       <View style={styles.info}>
         <Text style={[styles.tipo, { color: colors.secundario }]}>{item.categoria}</Text>
@@ -95,7 +114,7 @@ export default function EletronicoCard({ item, vazio }: EletronicoCardProps) {
           <View style={styles.iconRow}>
             <Ionicons name="cube-outline" size={16} color={colors.branco} />
             <Text style={[styles.material, { color: colors.branco, marginLeft: 4 }]}>
-              Quantidade: {item.massa}g
+              Quantidade: {formatarMassa(item.massa)}
             </Text>
           </View>
 

@@ -4,19 +4,22 @@ import { Eletronico } from '@/types/Eletronico';
 import { RelatorioTabScreenProps } from '@/types/navigation';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { FlatList, Text, View } from 'react-native';
+import { FlatList, TouchableOpacity, View, Text } from 'react-native';
 import { API_URL } from '../../../api';
 import BotaoPrimario from '../../../components/BotaoPrimario';
 import EletronicoCard from '../../../components/EletronicoCard';
 import Titulo from '../../../components/Titulo';
 import { auth } from '../../../firebaseConfig';
+import { ModalInfo } from '../../../components/CustomModal'; // 👈 seu modal pronto
 
-type Props = RelatorioTabScreenProps<"Histórico">;
+type Props = RelatorioTabScreenProps<'Histórico'>;
 
 const RelatorioScreen = ({ navigation }: Props) => {
-  const [eletronicos, setEletronicos] = useState([]);
+  const [eletronicos, setEletronicos] = useState<Eletronico[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedAnalise, setSelectedAnalise] = useState<string | null>(null);
 
   const { colors } = useTheme();
   const general = getGeneralStyles(colors);
@@ -32,7 +35,7 @@ const RelatorioScreen = ({ navigation }: Props) => {
       const response = await axios.get(`${API_URL}/eletronicos/usuario-soft/${user.uid}`);
       setEletronicos(response.data);
       setError(null);
-    } catch (err: Error | any) {
+    } catch (err: any) {
       console.error('Erro ao buscar eletrônicos:', err);
       setError(err.message || 'Erro ao carregar dados');
     } finally {
@@ -41,8 +44,8 @@ const RelatorioScreen = ({ navigation }: Props) => {
   };
 
   useEffect(() => {
-    const interval = setInterval(fetchEletronicos, 5000);
     fetchEletronicos();
+    const interval = setInterval(fetchEletronicos, 5000);
     return () => clearInterval(interval);
   }, []);
 
@@ -72,17 +75,33 @@ const RelatorioScreen = ({ navigation }: Props) => {
       {eletronicos.length === 0 ? (
         <EletronicoCard vazio />
       ) : (
-        <>
-          <FlatList<Eletronico>
-            data={eletronicos}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
+        <FlatList
+          data={eletronicos}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={{ paddingBottom: 20 }}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => {
+                if (item.analise_ia) {
+                  setSelectedAnalise(item.analise_ia);
+                  setModalVisible(true);
+                }
+              }}
+            >
               <EletronicoCard item={item} />
-            )}
-            contentContainerStyle={{ paddingBottom: 20 }}
-          />
-        </>
+            </TouchableOpacity>
+          )}
+        />
       )}
+
+      {/* 👇 Usando seu modal pronto */}
+      <ModalInfo
+        visible={modalVisible}
+        title="Análise da IA"
+        message={selectedAnalise || 'Nenhuma análise disponível.'}
+        onClose={() => setModalVisible(false)}
+      />
     </View>
   );
 };
