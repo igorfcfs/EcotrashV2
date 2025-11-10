@@ -2,16 +2,18 @@ import { useTheme } from '@/contexts/ThemeContext';
 import { StackScreenProps } from '@/types/navigation';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
-import React, { useState } from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Dimensions, Image, Keyboard, KeyboardAvoidingView, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BotaoLink from '../components/BotaoLink';
 import BotaoPrimario from '../components/BotaoPrimario';
+import BotaoSecundario from '../components/BotaoSecundario';
 import { ModalError, ModalSuccess } from '../components/CustomModal';
 import Input from '../components/Input';
 import Titulo from '../components/Titulo';
 import { auth, db } from '../firebaseConfig';
 import { getGeneralStyles } from '../styles/general';
+import { ScrollView } from 'react-native-gesture-handler';
 
 type Props = StackScreenProps<'Login'>;
 
@@ -29,6 +31,18 @@ export default function Login({ navigation }: Props) {
   const [modalType, setModalType] = useState<'error' | 'success'>('error');
   const [modalTitle, setModalTitle] = useState('');
   const [modalMessage, setModalMessage] = useState('');
+
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
+  
+  useEffect(() => {
+    const showSub = Keyboard.addListener('keyboardDidShow', () => setKeyboardOpen(true));
+    const hideSub = Keyboard.addListener('keyboardDidHide', () => setKeyboardOpen(false));
+
+    return () => {
+      showSub.remove();
+      hideSub.remove();
+    };
+  }, []);
 
   // Função auxiliar para exibir modal
   const showModal = (
@@ -90,102 +104,111 @@ export default function Login({ navigation }: Props) {
   }
 
   return (
-    <>
-      <SafeAreaView style={general.autenticacao.header}>
-        <SafeAreaView style={{ position: 'absolute', left: 10, alignItems: 'flex-start' }}>
-          <Titulo text="Bem-vindo" style={{ color: colors.neutro, marginBottom: 0 }} />
-          <Titulo text="Vamos começar." style={{ color: colors.neutro }} />
-          <Text style={{ color: colors.neutro }}>Faça login para continuar</Text>
-        </SafeAreaView>
-        <Image
-          source={require('../assets/logo.png')}
-          style={{
-            marginLeft: 250,
-            width: 120,
-            height: 100,
-            justifyContent: 'flex-end',
-          }}
-          resizeMode="contain"
+  <KeyboardAvoidingView
+    style={{ flex: 1 }}
+    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+  >
+    <ScrollView
+      scrollEnabled={keyboardOpen} // ✅ Só rola quando o teclado está aberto
+      contentContainerStyle={{ flexGrow: 1 }}
+      keyboardShouldPersistTaps="handled"
+      showsVerticalScrollIndicator={false}
+    >
+      {/* 🔹 Banner */}
+      <Image
+        source={require('../assets/bannerAuth.png')}
+        style={{
+          width: '120%',
+          marginLeft: -38,
+          marginTop: -20,
+          marginBottom: 10,
+          resizeMode: 'contain',
+        }}
+      />
+
+      {/* 🔹 Container principal */}
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: colors.backCard,
+          width: Dimensions.get('window').width,
+          borderTopLeftRadius: 30,
+          borderTopRightRadius: 30,
+          padding: 25,
+          marginTop: -25,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: -2 },
+          shadowOpacity: 0.15,
+          shadowRadius: 6,
+          elevation: 8,
+        }}
+      >
+        {/* 🔹 Campos */}
+        <Titulo text="E-mail" style={{ alignSelf: 'flex-start', fontSize: 16, marginBottom: 3 }} />
+        <Input
+          placeholder="Insira seu e-mail"
+          keyboardType="email-address"
+          autoCapitalize="none"
+          value={email}
+          onChangeText={setEmail}
         />
-      </SafeAreaView>
 
-      <View style={general.autenticacao.container}>
-        {/* Botões Tabs */}
-        <View style={general.autenticacao.tabContainer}>
-          <TouchableOpacity
-            style={general.autenticacao.activeTabLogIn}
-            onPress={() => navigation.navigate('Login')}
-          >
-            <Text style={general.autenticacao.activeTabText}>Log In</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={general.autenticacao.tab}
-            onPress={() => navigation.navigate('Cadastro')}
-          >
-            <Text style={general.autenticacao.tabText}>Cadastrar</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Campos */}
-        <View style={{ width: '100%', marginBottom: 20 }}>
-          <Titulo text="Email" style={{ alignSelf: 'flex-start', fontSize: 20, marginBottom: 3 }} />
+        <Titulo text="Senha" style={{ alignSelf: 'flex-start', fontSize: 16, marginBottom: 3 }} />
+        <View style={general.passwordContainer}>
           <Input
-            placeholder="Insira seu email"
-            keyboardType="email-address"
-            value={email}
-            onChangeText={setEmail}
+            placeholder="Insira sua senha"
+            secureTextEntry={!mostrarSenha}
+            value={senha}
+            onChangeText={setSenha}
+            style={general.passwordInput}
             autoCapitalize="none"
           />
-
-          <Titulo text="Senha" style={{ alignSelf: 'flex-start', fontSize: 20, marginBottom: 3 }} />
-          <View style={general.passwordContainer}>
-            <Input
-              placeholder="Insira sua senha"
-              secureTextEntry={!mostrarSenha}
-              value={senha}
-              onChangeText={setSenha}
-              style={general.passwordInput}
-              autoCapitalize="none"
+          <TouchableOpacity
+            style={general.eyeButton}
+            onPress={() => setMostrarSenha(!mostrarSenha)}
+            activeOpacity={0.7}
+          >
+            <Image
+              source={
+                mostrarSenha
+                  ? require('../assets/icons/visible.png')
+                  : require('../assets/icons/non-visible.png')
+              }
+              style={general.eyeIcon}
             />
-            <TouchableOpacity
-              style={general.eyeButton}
-              onPress={() => setMostrarSenha(!mostrarSenha)}
-              activeOpacity={0.7}
-            >
-              <Image
-                source={
-                  mostrarSenha
-                    ? require('../assets/icons/visible.png')
-                    : require('../assets/icons/non-visible.png')
-                }
-                style={general.eyeIcon}
-              />
-            </TouchableOpacity>
-          </View>
+          </TouchableOpacity>
         </View>
 
-        {/* Botões */}
-        <View style={{ width: '98%', alignItems: 'center' }}>
+        {/* 🔹 Botões */}
+        <View style={{ width: '98%', alignItems: 'center', marginTop: 10, marginBottom: 50 }}>
           <BotaoPrimario text="ENTRAR" onPress={signIn} />
           <BotaoLink
             text="Esqueci a senha"
             onPress={() => navigation.navigate('RecuperarSenha')}
           />
         </View>
-      </View>
 
-      {/* Modal de erro */}
+        {/* 🔹 Botão secundário */}
+        <View style={{ width: '98%', alignItems: 'center' }}>
+          <BotaoSecundario
+            text="Criar conta"
+            onPress={() => navigation.navigate('Cadastro')}
+          />
+        </View>
+      </View>
+    </ScrollView>
+
+    {/* 🔹 Modais */}
+    {modalType === 'error' ? (
       <ModalError
-        visible={modalVisible && modalType === 'error'}
+        visible={modalVisible}
         title={modalTitle}
         message={modalMessage}
         onClose={() => setModalVisible(false)}
       />
-
-      {/* Modal de sucesso */}
+    ) : (
       <ModalSuccess
-        visible={modalVisible && modalType === 'success'}
+        visible={modalVisible}
         title={modalTitle}
         message={modalMessage}
         showConfirmButton
@@ -199,8 +222,10 @@ export default function Login({ navigation }: Props) {
           navigation.navigate('Rotas');
         }}
       />
-    </>
-  );
+    )}
+  </KeyboardAvoidingView>
+);
+
 }
 
 const styles = StyleSheet.create({

@@ -24,7 +24,7 @@ export default function PrimaryButton({ text, onPress, style, textStyle }: Prima
 
 const styles = StyleSheet.create({
   button: {
-    width: '70%',
+    width: '100%',
     paddingVertical: 15,
     paddingHorizontal: 30,
     borderRadius: 100,

@@ -4,7 +4,7 @@
     "slug": "ecotrash_v2",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/logo.png",
+    "icon": "./assets/icons/logoApp.png",
     "scheme": "ecotech",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,

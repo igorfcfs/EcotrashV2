@@ -152,7 +152,7 @@ export default function EditarPerfil({ navigation }: Props) {
       const blob = await response_img.blob();
 
       const storage = getStorage();
-      const filename = `profile/${user.uid}/photo.jpg`;
+      const filename = `gs://${firebaseConfig.projectId}.firebasestorage.app/profile/${user.uid}/photo.jpg`;
       const imageRef = ref(storage, filename);
 
       await uploadBytes(imageRef, blob);

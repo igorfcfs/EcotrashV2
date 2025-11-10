@@ -12,10 +12,10 @@ export default function PrimaryButton({ text, onPress }: PrimaryButtonProps) {
 
   return (
     <TouchableOpacity
-      style={[styles.button, { borderColor: colors.primario }]}
+      style={[styles.button, { borderColor: colors.negrito }]}
       onPress={onPress}
     >
-      <Text style={[styles.buttonText, { color: colors.primario }]}>{text}</Text>
+      <Text style={[styles.buttonText, { color: colors.negrito }]}>{text}</Text>
     </TouchableOpacity>
   );
 }
@@ -25,8 +25,8 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: 'transparent',
     borderWidth: 1,
-    padding: 15,
-    borderRadius: 5,
+    paddingVertical: 10,
+    borderRadius: 100,
     alignItems: 'center',
     marginBottom: 15,
   },
