@@ -17,8 +17,8 @@ const HomeScreen = () => {
   const [massa, setMassa] = useState<number | null>(null);
   const [userId, setUserId] = useState('');
   const [localId, setLocalId] = useState(null);
-  const [qtdLixo, setQtdLixo] = useState(null);
-  const [qtdUserLixo, setQtdUserLixo] = useState(null);
+  const [qtdLixo, setQtdLixo] = useState<number | null>(null);
+  const [qtdUserLixo, setQtdUserLixo] = useState<number | null>(null);
   const [nomeLocal, setNomeLocal] = useState(null);
   const [nome, setNome] = useState('');
   const [loadingNome, setLoadingNome] = useState(true);
@@ -209,12 +209,20 @@ const HomeScreen = () => {
 
             <View style={styles.qtdReciclado}>
               <Text style={styles.cardTitle}>Reciclados nesse local</Text>
-              <Text style={styles.cardValue}>{formatarPeso(qtdLixo)}</Text>
+              {qtdLixo === null ? (
+                <ActivityIndicator color={colors.secundario} />
+              ) : (
+                <Text style={styles.cardValue}>{formatarPeso(qtdLixo)}</Text>
+              )}
             </View>
 
             <View style={styles.qtdReciclado}>
               <Text style={styles.cardTitle}>Você reciclou nesse local</Text>
-              <Text style={styles.cardValue}>{formatarPeso(qtdUserLixo)}</Text>
+              {qtdUserLixo === null ? (
+                <ActivityIndicator color={colors.secundario} />
+              ) : (
+                <Text style={styles.cardValue}>{formatarPeso(qtdUserLixo)}</Text>
+              )}
             </View>
           </View>
         ) : (

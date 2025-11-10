@@ -27,7 +27,7 @@ export default function Perfil({ navigation }: Props) {
   const [imageUri, setImageUri] = useState(null);
   const [nome, setNome] = useState('Usuário');
   const [userId, setUserId] = useState('');
-  const [massa, setMassa] = useState(0);
+  const [massa, setMassa] = useState<number | null>(null);
 
   const { colors } = useTheme();
 

@@ -1,4 +1,4 @@
-import { ModalError, ModalSuccess } from '@/components/CustomModal'; // 🔹 Importa modais
+import { ModalError, ModalSuccess } from '@/components/CustomModal';
 import Titulo from '@/components/Titulo';
 import { useTheme } from '@/contexts/ThemeContext';
 import { StackScreenProps } from '@/types/navigation';
@@ -16,18 +16,18 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Alert
 } from 'react-native';
 import { API_URL } from '../../../api';
 import BotaoPrimario from '../../../components/BotaoPrimario';
 import Input from '../../../components/Input';
 import { auth, db, firebaseConfig } from '../../../firebaseConfig';
-import ModalTrocarFoto from '@/components/ModalTrocarFoto'; // ajuste o caminho conforme sua estrutura
+import ModalTrocarFoto from '@/components/ModalTrocarFoto';
 
 type Props = StackScreenProps<'EditarPerfil'>;
 
 export default function EditarPerfil({ navigation }: Props) {
   const [imageUri, setImageUri] = useState<string | null>(null);
+  const [fotoAtual, setFotoAtual] = useState<string | null>(null);
   const [hasGalleryPermission, setHasGalleryPermission] = useState<boolean | null>(null);
   const [email, setEmail] = useState('');
   const [nome, setNome] = useState('Usuário');
@@ -106,6 +106,7 @@ export default function EditarPerfil({ navigation }: Props) {
         setTelefone(data.telefone || '');
         setCpf(data.cpf || '');
         setEndereco(data.endereco || '');
+        setFotoAtual(data.fotoPerfil || null);
         setImageUri(data.fotoPerfil || null);
       }
     });
@@ -142,32 +143,7 @@ export default function EditarPerfil({ navigation }: Props) {
     })();
   }, []);
 
-  // Upload da imagem de perfil
-  const uploadImageAndSaveUrl = async (uri: string) => {
-    try {
-      const user = auth.currentUser;
-      if (!user) return;
-
-      const response_img = await fetch(uri);
-      const blob = await response_img.blob();
-
-      const storage = getStorage();
-      const filename = `gs://${firebaseConfig.projectId}.firebasestorage.app/profile/${user.uid}/photo.jpg`;
-      const imageRef = ref(storage, filename);
-
-      await uploadBytes(imageRef, blob);
-      const downloadURL = await getDownloadURL(imageRef);
-
-      const userRef = doc(db, 'users', user.uid);
-      await updateDoc(userRef, { fotoPerfil: downloadURL });
-
-      showModal('success', 'Sucesso', 'Foto de perfil atualizada com sucesso!');
-    } catch (error) {
-      console.error('🔥 Erro ao fazer upload da imagem:', error);
-      showModal('error', 'Erro', 'Não foi possível atualizar a foto de perfil.');
-    }
-  };
-
+  // 📸 Escolher imagem da galeria (não faz upload ainda)
   const pickImageFromGallery = async () => {
     if (!hasGalleryPermission) {
       showModal('error', 'Permissão necessária', 'Você precisa conceder permissão para acessar a galeria.');
@@ -184,12 +160,12 @@ export default function EditarPerfil({ navigation }: Props) {
     if (!result.canceled && result.assets?.length > 0) {
       const asset = result.assets[0];
       if (asset.uri) {
-        setImageUri(asset.uri);
-        await uploadImageAndSaveUrl(asset.uri);
+        setImageUri(asset.uri); // apenas atualiza o preview
       }
     }
   };
 
+  // 📸 Tirar foto (não faz upload ainda)
   const takePhoto = async () => {
     if (!hasGalleryPermission) {
       showModal('error', 'Permissão necessária', 'Você precisa conceder permissão para usar a câmera.');
@@ -205,8 +181,7 @@ export default function EditarPerfil({ navigation }: Props) {
     if (!result.canceled && result.assets?.length > 0) {
       const asset = result.assets[0];
       if (asset.uri) {
-        setImageUri(asset.uri);
-        await uploadImageAndSaveUrl(asset.uri);
+        setImageUri(asset.uri); // apenas atualiza o preview
       }
     }
   };
@@ -215,19 +190,42 @@ export default function EditarPerfil({ navigation }: Props) {
     setModalTrocarFotoVisible(true);
   };
 
+  // 💾 Upload da imagem e salvar dados
   const handleSalvarAlteracoes = async () => {
-    if (userId) {
-      try {
-        await axios.put(`${API_URL}/users/${userId}`, {
-          nome,
-          email,
-          telefone,
-        });
-        showModal('success', 'Sucesso', 'Alterações salvas com sucesso!');
-      } catch (error) {
-        console.error('Erro ao salvar alterações:', error);
-        showModal('error', 'Erro', 'Não foi possível salvar as alterações.');
+    if (!userId) return;
+
+    try {
+      const user = auth.currentUser;
+      let fotoUrlAtualizada = fotoAtual;
+
+      // 🔹 Só faz upload se o usuário escolheu uma nova foto local
+      if (imageUri && imageUri.startsWith('file://')) {
+        const response_img = await fetch(imageUri);
+        const blob = await response_img.blob();
+
+        const storage = getStorage();
+        // 🔸 Mantém o mesmo caminho original com gs://
+        const filename = `gs://${firebaseConfig.projectId}.firebasestorage.app/profile/${user.uid}/photo.jpg`;
+        const imageRef = ref(storage, filename);
+
+        await uploadBytes(imageRef, blob);
+        fotoUrlAtualizada = await getDownloadURL(imageRef);
+
+        const userRef = doc(db, 'users', user.uid);
+        await updateDoc(userRef, { fotoPerfil: fotoUrlAtualizada });
       }
+
+      // 🔹 Atualiza os outros dados
+      await axios.put(`${API_URL}/users/${userId}`, {
+        nome,
+        email,
+        telefone,
+      });
+
+      showModal('success', 'Sucesso', 'Alterações salvas com sucesso!');
+    } catch (error) {
+      console.error('🔥 Erro ao salvar alterações:', error);
+      showModal('error', 'Erro', 'Não foi possível salvar as alterações.');
     }
   };
 
@@ -306,6 +304,7 @@ export default function EditarPerfil({ navigation }: Props) {
           }}
         />
       )}
+
       <ModalTrocarFoto
         visible={modalTrocarFotoVisible}
         onClose={() => setModalTrocarFotoVisible(false)}
