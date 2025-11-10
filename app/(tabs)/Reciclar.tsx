@@ -9,45 +9,74 @@ export default function ReciclarScreen() {
   const general = getGeneralStyles(colors);
 
   const cupons = [
-    { id: '1', title: 'Cartão Presente Loja X', value: '400/600' },
-    { id: '2', title: 'Cartão Presente Loja Y', value: '400/600' },
-    { id: '3', title: 'Cartão Presente Loja Z', value: '400/600' },
+    { id: '1', title: 'Cartão Presente Loja X', value: '400 / 600' },
+    { id: '2', title: 'Cartão Presente Loja Y', value: '400 / 600' },
+    { id: '3', title: 'Cartão Presente Loja Z', value: '400 / 600' },
   ];
 
   const styles = StyleSheet.create({
     banner: {
       width: '100%',
-      height: 180,
+      height: 200,
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: '#000',
+      overflow: 'hidden',
     },
     bannerOverlay: {
       ...StyleSheet.absoluteFillObject,
-      backgroundColor: 'rgba(0,0,0,0.3)',
-      borderRadius: 0,
+      backgroundColor: 'rgba(0, 0, 0, 0.45)',
     },
     coins: {
-      fontSize: 36,
-      fontWeight: '700',
+      fontSize: 38,
+      fontWeight: '800',
       color: '#fff',
-      marginTop: 4,
+      marginTop: 8,
+      textShadowColor: 'rgba(0,0,0,0.4)',
+      textShadowOffset: { width: 0, height: 2 },
+      textShadowRadius: 6,
     },
     actionsContainer: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       marginHorizontal: 20,
-      marginTop: -30,
+      marginTop: -35,
       backgroundColor: colors.backCard,
-      padding: 30,
-      borderRadius: 16,
+      paddingVertical: 25,
+      paddingHorizontal: 20,
+      borderRadius: 20,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.2,
+      shadowRadius: 6,
+      elevation: 5,
     },
     action: {
       flex: 1,
-      backgroundColor: '#fff',
-      paddingVertical: 12,
-      marginHorizontal: 5,
-      borderRadius: 16,
+      alignItems: 'center',
+    },
+    actionText: {
+      fontSize: 14,
+      fontWeight: '700',
+      color: colors.titulo,
+    },
+    cuponsHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginHorizontal: 20,
+      marginTop: 30,
+    },
+    verMais: {
+      color: colors.secundario,
+      fontWeight: '600',
+      fontSize: 14,
+    },
+    cuponCard: {
+      backgroundColor: colors.backCard,
+      borderRadius: 20,
+      padding: 16,
+      marginRight: 16,
+      width: 160,
       alignItems: 'center',
       shadowColor: '#000',
       shadowOffset: { width: 0, height: 2 },
@@ -55,56 +84,60 @@ export default function ReciclarScreen() {
       shadowRadius: 4,
       elevation: 3,
     },
-    actionText: {
-      fontSize: 12,
-      fontWeight: '600',
-      color: '#333',
-    },
-    cuponsHeader: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      marginHorizontal: 20,
-      marginTop: 20,
-    },
-    cuponCard: {
-      backgroundColor: colors.secundario,
-      borderRadius: 16,
-      padding: 16,
-      marginRight: 12,
-      width: 150,
-      height: 150,
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 4,
-      elevation: 2,
+    cuponImage: {
+      width: 80,
+      height: 80,
+      borderRadius: 10,
+      marginBottom: 10,
     },
     cuponTitle: {
-      fontSize: 16,
+      fontSize: 15,
       fontWeight: '600',
-      marginBottom: 6,
-      color: '#333',
+      textAlign: 'center',
+      color: colors.titulo,
+      marginBottom: 4,
     },
     cuponValue: {
-      fontSize: 14,
-      color: '#666',
+      fontSize: 13,
+      color: colors.textoSecundario,
     },
-    cuponImage: {
-      marginBottom: 0,
-      width: '60%',
-      height: 60,
-      position: 'relative',
-      top: -30,
-      // tintColor: '#fff',
-      backgroundColor: '#fff',
-      borderRadius: 8,
-      alignSelf: 'center',
-    }
+    dicasContainer: {
+      backgroundColor: colors.backCard,
+      marginHorizontal: 20,
+      marginTop: 25,
+      padding: 20,
+      borderRadius: 20,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 3 },
+      shadowOpacity: 0.15,
+      shadowRadius: 5,
+      elevation: 4,
+    },
+    dicasTitle: {
+      fontSize: 18,
+      fontWeight: '700',
+      color: colors.titulo,
+      marginBottom: 8,
+    },
+    dicaTexto: {
+      fontSize: 14,
+      color: colors.textoSecundario,
+      lineHeight: 20,
+    },
+    rodape: {
+      alignItems: 'center',
+      marginTop: 30,
+      marginBottom: 40,
+      opacity: 0.6,
+    },
+    rodapeTexto: {
+      fontSize: 12,
+      color: colors.textoSecundario,
+    },
   });
 
   return (
-    <ScrollView style={{backgroundColor: colors.background}}>
+    <ScrollView style={{ backgroundColor: colors.background }}>
       {/* Banner */}
       <ImageBackground
         source={require('../../assets/bannerHome.png')}
@@ -112,7 +145,7 @@ export default function ReciclarScreen() {
         resizeMode="cover"
       >
         <View style={styles.bannerOverlay} />
-        <Titulo text="E-coins disponíveis" style={{color: '#fff'}} />
+        <Titulo text="E-coins disponíveis" style={{ color: '#fff' }} />
         <Text style={styles.coins}>400</Text>
       </ImageBackground>
 
@@ -131,8 +164,12 @@ export default function ReciclarScreen() {
 
       {/* Cupons */}
       <View style={styles.cuponsHeader}>
-        <Text style={{ fontSize: 18, fontWeight: '700', color: colors.titulo }}>Cupons disponíveis</Text>
-        <Text style={{ color: colors.secundario, fontWeight: '600' }}>Ver mais</Text>
+        <Text style={{ fontSize: 18, fontWeight: '700', color: colors.titulo }}>
+          Cupons disponíveis
+        </Text>
+        <TouchableOpacity>
+          <Text style={styles.verMais}>Ver mais</Text>
+        </TouchableOpacity>
       </View>
 
       <FlatList
@@ -140,15 +177,35 @@ export default function ReciclarScreen() {
         keyExtractor={(item) => item.id}
         horizontal
         showsHorizontalScrollIndicator={false}
-        style={{ marginTop: 12, paddingVertical: 50, paddingHorizontal: 20, backgroundColor: colors.backCard }}
+        contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 40 }}
         renderItem={({ item }) => (
           <View style={styles.cuponCard}>
-            <Image source={require('../../assets/assistencia-tecnica-samsung.jpeg')} style={styles.cuponImage} resizeMode="contain" />
+            <Image
+              source={require('../../assets/assistencia-tecnica-samsung.jpeg')}
+              style={styles.cuponImage}
+              resizeMode="cover"
+            />
             <Text style={styles.cuponTitle}>{item.title}</Text>
             <Text style={styles.cuponValue}>{item.value}</Text>
           </View>
         )}
       />
+
+      {/* Dicas de Reciclagem */}
+      <View style={styles.dicasContainer}>
+        <Text style={styles.dicasTitle}>Dicas para ganhar mais E-coins 💡</Text>
+        <Text style={styles.dicaTexto}>
+          • Separe corretamente seus recicláveis antes de entregar.{'\n'}
+          • Verifique os pontos de coleta parceiros mais próximos.{'\n'}
+          • Recicle com frequência — quanto mais reciclar, mais E-coins você ganha!{'\n'}
+          • Compartilhe com amigos e incentive a comunidade.
+        </Text>
+      </View>
+
+      {/* Rodapé */}
+      <View style={styles.rodape}>
+        <Text style={styles.rodapeTexto}>© 2025 EcoTech App — Todos os direitos reservados</Text>
+      </View>
     </ScrollView>
   );
 }

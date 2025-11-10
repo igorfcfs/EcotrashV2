@@ -42,11 +42,11 @@ export const Colors = {
     fundo: '#e6e8d6',
 
     neutro: '#fff',
-    inverso: '#222f22',
+    inverso: '#000',
 
     titulo: '#fff',
     negrito: '#d1e53d',
-    backCard: '#000',
+    backCard: '#222f22',
     backCardLixoReciclado: '#cbd29b',
 
     backgroundAuth: "#8e9556",

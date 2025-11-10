@@ -70,7 +70,6 @@ export default function Mapa({ navigation }: Props) {
     },
   });
 
-
   const fetchLocais = async () => {
     try {
       setLoading(true);
@@ -81,6 +80,22 @@ export default function Mapa({ navigation }: Props) {
           typeof local.coordenadas._latitude === 'number' &&
           typeof local.coordenadas._longitude === 'number'
       );
+
+      // Só ordena se a localização do usuário estiver disponível
+      if (userLocation) {
+        locaisValidos.sort((a, b) => {
+          const distA = Math.sqrt(
+            Math.pow(a.coordenadas._latitude - userLocation.latitude, 2) +
+            Math.pow(a.coordenadas._longitude - userLocation.longitude, 2)
+          );
+          const distB = Math.sqrt(
+            Math.pow(b.coordenadas._latitude - userLocation.latitude, 2) +
+            Math.pow(b.coordenadas._longitude - userLocation.longitude, 2)
+          );
+          return distA - distB;
+        });
+      }
+
       setLocais(locaisValidos);
       setError(null);
     } catch (err) {
@@ -91,53 +106,66 @@ export default function Mapa({ navigation }: Props) {
     }
   };
 
-  useEffect(() => {
-    const initialize = async () => {
-      try {
-        const { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-          setError('Permissão de localização negada');
-          setLoading(false);
-          return;
-        }
-        setHasLocationPermission(true);
-
-        const location = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High });
-        setUserLocation(location.coords);
-
-        await fetchLocais();
-      } catch (err) {
-        console.error('Erro na inicialização:', err);
-        setError('Erro ao carregar o mapa');
-      } finally {
+  // 1️⃣ Inicializa localização do usuário
+useEffect(() => {
+  const initialize = async () => {
+    try {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setError('Permissão de localização negada');
         setLoading(false);
+        return;
       }
-    };
+      setHasLocationPermission(true);
 
-    initialize();
-    const interval = setInterval(fetchLocais, 3600000);
-    return () => clearInterval(interval);
-  }, []);
+      const location = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High });
+      setUserLocation(location.coords);
+    } catch (err) {
+      console.error('Erro na inicialização:', err);
+      setError('Erro ao carregar o mapa');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  useEffect(() => {
-    const subscription = DeviceEventEmitter.addListener(
-      'GO_TO_LOCAL',
-      ({ latitude, longitude }: { latitude: number; longitude: number }) => {
-        if (!mapRef.current) return;
-        mapRef.current.animateToRegion(
-          {
-            latitude,
-            longitude,
-            latitudeDelta: 0.01,
-            longitudeDelta: 0.01,
-          },
-          1000
-        );
-      }
-    );
+  initialize();
+}, []);
 
-    return () => subscription.remove();
-  }, []);
+// 2️⃣ Assim que tiver localização, carrega e ordena os locais
+useEffect(() => {
+  if (!userLocation) return;
+
+  const loadLocais = async () => {
+    await fetchLocais();
+  };
+
+  loadLocais();
+
+  const interval = setInterval(fetchLocais, 3600000);
+  return () => clearInterval(interval);
+}, [userLocation]);
+
+// 3️⃣ Garante que o redirecionamento para o local funcione SEMPRE
+useEffect(() => {
+  const subscription = DeviceEventEmitter.addListener(
+    'GO_TO_LOCAL',
+    ({ latitude, longitude }: { latitude: number; longitude: number }) => {
+      if (!mapRef.current || !latitude || !longitude) return;
+      mapRef.current.animateToRegion(
+        {
+          latitude,
+          longitude,
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01,
+        },
+        1000
+      );
+    }
+  );
+
+  return () => subscription.remove();
+}, [userLocation]); // <--- dependência corrigida
+
 
   const handleMarkerPress = (local: Local) => {
     setSelectedLocais(local);
