@@ -14,10 +14,10 @@ export default function ConfirmacaoReset({ route, navigation }: any) {
   return (
     <SafeAreaView style={general.autenticacao.container}>
       <View style={{ alignItems: 'center', marginTop: 50 }}>
-        <Text style={{ fontSize: 24, fontWeight: 'bold', color: colors.primario, marginBottom: 20 }}>
+        <Text style={{ fontSize: 24, fontWeight: 'bold', color: colors.titulo, marginBottom: 20 }}>
           E-mail enviado!
         </Text>
-        <Text style={{ color: colors.primario, textAlign: 'center', marginBottom: 40 }}>
+        <Text style={{ color: colors.titulo, textAlign: 'center', marginBottom: 40 }}>
           Verifique sua caixa de entrada em <Text style={{ fontWeight: 'bold' }}>{email}</Text> para redefinir sua senha.
         </Text>
 

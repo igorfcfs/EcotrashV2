@@ -8,13 +8,13 @@ export const Colors = {
     secundario: '#B6BF6F', // Verde claro
     terciario: '#1c1c1c', // Preto
 
-    verdeCinza: '#bdbfaa',
+    verdeCinza: '#abad93ff',
     branco: '#000',
     tabBar: '#ffffff',
     marrom: '#a6702e',
 
     neutro: '#fff',
-    inverso: '#fff',
+    inverso: '#000',
 
     texto: '#a7aca7',
     fundo: '#ffffff',
@@ -27,13 +27,17 @@ export const Colors = {
 
     background: '#ffffff',
     backgroundSecundario: '#e6e8d6',
+    buttonOnboarding: '#9BA363',
+
+    inputBackground: '#D9D9D9',
+    anomalia: '#d4d4d4ff'
   },
   dark: {
     primario: '#54592F',
     secundario: '#B6BF6F',
     terciario: '#1c1c1c',
 
-    verdeCinza: '#bdbfaa',
+    verdeCinza: '#abad93ff',
     branco: '#f2f2f0',
     tabBar: '#4c4c4c',
     marrom: '#a6702e',
@@ -42,7 +46,7 @@ export const Colors = {
     fundo: '#e6e8d6',
 
     neutro: '#fff',
-    inverso: '#000',
+    inverso: '#fff',
 
     titulo: '#fff',
     negrito: '#d1e53d',
@@ -52,7 +56,11 @@ export const Colors = {
     backgroundAuth: "#8e9556",
 
     background: '#141C14',
-    backgroundSecundario: '#E6E8D6',
+    backgroundSecundario: '#000',
+    buttonOnboarding: '#d1e53d',
+
+    inputBackground: '#222f22',
+    anomalia: '#ff5858ff'
   },
 };
 

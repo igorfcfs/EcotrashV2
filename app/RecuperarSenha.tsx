@@ -1,9 +1,10 @@
 import { useTheme } from '@/contexts/ThemeContext';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import React, { useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BotaoPrimario from '../components/BotaoPrimario';
+import BotaoSecundario from '../components/BotaoSecundario';
 import { ModalError, ModalInfo } from '../components/CustomModal';
 import Input from '../components/Input';
 import Titulo from '../components/Titulo';
@@ -73,12 +74,12 @@ export default function RecuperarSenha({ navigation }: any) {
           <Titulo
             text="Recuperar Senha"
             style={{
-              color: colors.primario,
+              color: colors.titulo,
               fontSize: 24,
               marginBottom: 10,
             }}
           />
-          <Text style={{ color: colors.primario }}>
+          <Text style={{ color: colors.titulo }}>
             Digite seu e-mail para receber o link de redefinição de senha.
           </Text>
         </View>
@@ -91,17 +92,8 @@ export default function RecuperarSenha({ navigation }: any) {
           autoCapitalize="none"
         />
 
-        <View style={{ marginTop: 20 }}>
-          <BotaoPrimario text="Enviar e-mail" onPress={handleResetPassword} />
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={{ marginTop: 15 }}
-          >
-            <Text style={{ color: colors.primario, textAlign: 'center' }}>
-              Voltar para login
-            </Text>
-          </TouchableOpacity>
-        </View>
+        <BotaoPrimario text="Enviar e-mail" onPress={handleResetPassword} />
+        <BotaoSecundario text="Voltar para login" onPress={() => navigation.goBack()} />
       </SafeAreaView>
 
       {/* Modal de erro */}

@@ -118,11 +118,9 @@ export default function Login({ navigation }: Props) {
       <Image
         source={require('../assets/bannerAuth.png')}
         style={{
-          width: '120%',
-          marginLeft: -38,
-          marginTop: -20,
+          width: '100%',
           marginBottom: 10,
-          resizeMode: 'contain',
+          resizeMode: 'cover',
         }}
       />
 
@@ -130,7 +128,9 @@ export default function Login({ navigation }: Props) {
       <View
         style={{
           flex: 1,
-          backgroundColor: colors.backCard,
+          backgroundColor: colors.background,
+          transform: [{ translateY: -50 }],
+          marginBottom: -50,
           width: Dimensions.get('window').width,
           borderTopLeftRadius: 30,
           borderTopRightRadius: 30,

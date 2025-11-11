@@ -15,9 +15,11 @@ import Login from './Login';
 import RecuperarSenha from './RecuperarSenha';
 import TermosDeUso from './TermosDeUso';
 import Local from './(tabs)/locais/Local';
+import Onboarding from './Onboarding';
 
 // Contexto de Tema
 import { ThemeProvider, useTheme } from '@/contexts/ThemeContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createStackNavigator();
 
@@ -26,6 +28,8 @@ const AppContent = () => {
   const [isConnected, setIsConnected] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(true); // novo estado
   const { colors } = useTheme();
+
+  const [isFirstTime, setIsFirstTime] = useState<boolean | null>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (_user) => {
@@ -43,6 +47,19 @@ const AppContent = () => {
 
     return unsubscribe;
   }, []);
+
+  useEffect(() => {
+    const checkFirstTime = async () => {
+      const hasOpened = await AsyncStorage.getItem('@hasOpenedApp');
+      setIsFirstTime(!hasOpened);
+      if (!hasOpened) {
+        await AsyncStorage.setItem('@hasOpenedApp', 'true');
+      }
+    };
+    checkFirstTime();
+  }, []);
+
+  if (isFirstTime === null) return null; // loading splash
 
   // Exibe tela de carregamento inicial
   if (loading || isConnected === null) {
@@ -70,7 +87,17 @@ const AppContent = () => {
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      {user ? (
+      {isFirstTime ? (
+        <>
+          <Stack.Screen name='Onboarding' component={Onboarding} />
+          <Stack.Screen name='Login' component={Login} />
+          <Stack.Screen name='Cadastro' component={Cadastro} />
+          <Stack.Screen name='RecuperarSenha' component={RecuperarSenha} />
+          <Stack.Screen name='ConfirmacaoReset' component={ConfirmacaoReset} />
+          <Stack.Screen name='TermosDeUso' component={TermosDeUso} />
+        </>
+      ) 
+      : user ? (
         <>
           <Stack.Screen name='Rotas' component={Rotas} />
           <Stack.Screen 

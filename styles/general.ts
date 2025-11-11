@@ -58,7 +58,7 @@ export const getGeneralStyles = (colors: ColorsType): GeneralStyles => ({
     container: {
       flex: 1,
       padding: 20,
-      backgroundColor: colors.backgroundAuth,
+      backgroundColor: colors.background,
       justifyContent: 'flex-start',
       alignItems: 'center',
     },
@@ -151,7 +151,7 @@ export const getGeneralStyles = (colors: ColorsType): GeneralStyles => ({
   textInputs: {
     input: {
       width: '100%',
-      backgroundColor: colors.inverso,
+      backgroundColor: colors.inputBackground,
       borderWidth: 0,
       borderColor: colors.primario,
       color: colors.branco,

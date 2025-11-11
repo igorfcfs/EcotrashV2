@@ -74,12 +74,12 @@ export default function EletronicoCard({ item, vazio }: EletronicoCardProps) {
 
   if (vazio || !item) {
     return (
-      <View style={[styles.card, { backgroundColor: colors.backCard }]}>
+      <View style={[styles.card, { backgroundColor: colors.background }]}>
         <View style={styles.info}>
-          <Text style={[styles.tipo, { color: colors.primario }]}>
+          <Text style={[styles.tipo, { color: colors.titulo }]}>
             Nenhum eletrônico reciclado ainda
           </Text>
-          <Text style={[styles.marcaModelo, { color: colors.secundario }]}>
+          <Text style={[styles.marcaModelo, { color: colors.titulo }]}>
             Quando você reciclar, os dados aparecerão aqui 😄
           </Text>
         </View>
@@ -102,7 +102,7 @@ export default function EletronicoCard({ item, vazio }: EletronicoCardProps) {
     <View
       style={[
         styles.card,
-        { backgroundColor: item.anomalia_detectada ? '#d4d4d4ff' : colors.backCard } // 🔴 fundo vermelho se anômalo
+        { backgroundColor: item.anomalia_detectada ? colors.anomalia : colors.backCard } // 🔴 fundo vermelho se anômalo
       ]}
     >
 

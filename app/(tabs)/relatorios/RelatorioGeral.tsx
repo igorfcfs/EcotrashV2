@@ -143,11 +143,17 @@ const RelatorioScreen = () => {
       color: '#333',
     },
     card: {
-      backgroundColor: '#f5f5f5',
-      padding: 20,
-      margin: 20,
+      backgroundColor: colors.background,
       borderRadius: 10,
+      padding: 15,
+      marginBottom: 15,
+      elevation: 2,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.2,
+      shadowRadius: 2,
       alignItems: 'center',
+      justifyContent: 'space-between',
     },
     info: {
       alignItems: 'center',
@@ -156,11 +162,11 @@ const RelatorioScreen = () => {
       fontSize: 16,
       fontWeight: 'bold',
       marginBottom: 5,
-      color: '#666',
+      color: colors.titulo,
     },
     marcaModelo: {
       fontSize: 14,
-      color: '#888',
+      color: colors.titulo,
       textAlign: 'center',
     },
   });
@@ -348,4 +354,3 @@ const RelatorioScreen = () => {
 };
 
 export default RelatorioScreen;
-

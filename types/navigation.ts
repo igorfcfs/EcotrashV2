@@ -34,6 +34,7 @@ export type RootStackParamList = {
   Histórico: undefined;
   Local: { localId: string };
   Mapa: { destinoLatitude: number; destinoLongitude: number, localId: string };
+  Onboarding: undefined;
 };
 
 /**

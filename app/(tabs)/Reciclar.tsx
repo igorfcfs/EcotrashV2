@@ -99,7 +99,7 @@ export default function ReciclarScreen() {
     },
     cuponValue: {
       fontSize: 13,
-      color: colors.textoSecundario,
+      color: colors.titulo,
     },
     dicasContainer: {
       backgroundColor: colors.backCard,
@@ -121,7 +121,7 @@ export default function ReciclarScreen() {
     },
     dicaTexto: {
       fontSize: 14,
-      color: colors.textoSecundario,
+      color: colors.titulo,
       lineHeight: 20,
     },
     rodape: {
@@ -132,7 +132,7 @@ export default function ReciclarScreen() {
     },
     rodapeTexto: {
       fontSize: 12,
-      color: colors.textoSecundario,
+      color: colors.titulo,
     },
   });
 

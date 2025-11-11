@@ -20,18 +20,16 @@ import React, { useEffect, useState } from 'react';
 import {
   Dimensions,
   Image,
-  ImageBackground,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View
 } from 'react-native';
-import { ActivityIndicator, Checkbox } from 'react-native-paper';
+import { Checkbox } from 'react-native-paper';
 import { API_URL } from '../api';
 import BotaoPrimario from '../components/BotaoPrimario';
 import BotaoSecundario from '../components/BotaoSecundario';
@@ -42,7 +40,6 @@ type Props = StackScreenProps<'Cadastro'>;
 
 export default function Cadastro({ navigation }: Props) {
   const [nome, setNome] = useState('');
-  const [sobrenome, setSobrenome] = useState('');
   const [cpf, setCpf] = useState('');
   const [telefone, setTelefone] = useState('');
   const [email, setEmail] = useState('');
@@ -194,6 +191,15 @@ export default function Cadastro({ navigation }: Props) {
       return;
     }
 
+    const usersRef = collection(db, 'users');
+    const cpfQuery = query(usersRef, where('cpf', '==', cpf));
+    const cpfSnapshot = await getDocs(cpfQuery);
+
+    if (!cpfSnapshot.empty) {
+      showModal('error', 'Erro', 'CPF já está em uso!');
+      return; // interrompe o cadastro aqui
+    }
+
     try {
       const usersRef = collection(db, 'users');
       const q = query(usersRef, where('cpf', '==', cpf));
@@ -232,7 +238,7 @@ export default function Cadastro({ navigation }: Props) {
         responseUsers = await axios.post(`${API_URL}/users`, userData);
       }
 
-      if (responseUsers.status !== 200 && responseUsers.status !== 201) {
+      if (responseUsers?.status !== 200 && responseUsers?.status !== 201) {
         throw new Error('Erro ao salvar usuário no banco de dados');
       }
 
@@ -273,18 +279,18 @@ export default function Cadastro({ navigation }: Props) {
         <Image
           source={require('../assets/bannerAuth.png')}
           style={{
-            width: '120%',
-            marginLeft: -38,
-            marginTop: -20,
+            width: '100%',
             marginBottom: 10,
-            resizeMode: 'contain',
+            resizeMode: 'cover',
           }}
         />
 
         {/* 🔹 Conteúdo principal */}
         <View  style={{
           flex: 1,
-          backgroundColor: colors.backCard,
+          backgroundColor: colors.background,
+          transform: [{ translateY: -50 }],
+          marginBottom: -50,
           width: Dimensions.get('window').width, // ✅ pega a largura exata da tela
           borderTopLeftRadius: 30,
           borderTopRightRadius: 30,
